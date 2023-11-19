@@ -11,11 +11,12 @@ class FileStorage:
     def all(self, cls=None):
         """Returns a dictionary of models of specified class from storage"""
         if not cls:
-            return FileStorage.__objects
+            return self.__objects
 
         objs = {}
         for k, v in self.__objects.items():
-            if type(v) is cls:
+            # `cls` may be a class or the name of a class
+            if type(v) is cls or type(v).__name__ == cls:
                 objs[k] = v
 
         return objs
