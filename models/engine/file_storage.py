@@ -14,7 +14,7 @@ class FileStorage:
             return FileStorage.__objects
 
         objs = {}
-        for k, v in self.__objects:
+        for k, v in self.__objects.items():
             if type(v) is cls:
                 objs[k] = v
 
