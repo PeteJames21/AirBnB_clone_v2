@@ -10,15 +10,16 @@ class FileStorage:
 
     def all(self, cls=None):
         """Returns a dictionary of models of specified class from storage"""
-        if cls is not None:
-            if type(cls) == str:
-                cls = eval(cls)
-            cls_dict = {}
-            for k, v in self.__objects.items():
-                if type(v) == cls:
-                    cls_dict[k] = v
-            return cls_dict
-        return self.__objects
+        if not cls:
+            return self.__objects
+
+        objs = {}
+        for k, v in self.__objects.items():
+            # `cls` may be a class or the name of a class
+            if type(v) is cls or type(v).__name__ == cls:
+                objs[k] = v
+
+        return objs
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
@@ -33,16 +34,11 @@ class FileStorage:
                 temp[key] = val.to_dict()
             json.dump(temp, f)
 
-    def delete(self, obj=None):
-        """Delete an object from the storage dictionary."""
-        class_name = type(obj).__name__
+     def delete(self, obj=None):
+        """Delete a given object from __objects, if it exists."""
         try:
-            id_ = f"{class_name}.{obj.id}"
-            del self.__objects[id_]
-        except (KeyError, AttributeError):
-            # Do nothing if obj does not exist in the storage dict.
-            # AttributeError is raised if object does not have an 'id'.
-            # KeyError is raised if no matching id is found in the dict.
+            del self.__objects["{}.{}".format(type(obj).__name__, obj.id)]
+        except (AttributeError, KeyError):
             pass
 
     def reload(self):
