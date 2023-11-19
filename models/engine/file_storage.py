@@ -1,6 +1,13 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
+from models.base_model import BaseModel
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
 
 class FileStorage:
@@ -34,22 +41,20 @@ class FileStorage:
                 temp[key] = val.to_dict()
             json.dump(temp, f)
 
-     def delete(self, obj=None):
-        """Delete a given object from __objects, if it exists."""
+    def delete(self, obj=None):
+        """Delete an object from the storage dictionary."""
+        class_name = type(obj).__name__
         try:
-            del self.__objects["{}.{}".format(type(obj).__name__, obj.id)]
-        except (AttributeError, KeyError):
+            id_ = f"{class_name}.{obj.id}"
+            del self.__objects[id_]
+        except (KeyError, AttributeError):
+            # Do nothing if obj does not exist in the storage dict.
+            # AttributeError is raised if object does not have an 'id'.
+            # KeyError is raised if no matching id is found in the dict.
             pass
 
     def reload(self):
         """Loads storage dictionary from file"""
-        from models.base_model import BaseModel
-        from models.user import User
-        from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
 
         classes = {
                     'BaseModel': BaseModel, 'User': User, 'Place': Place,
