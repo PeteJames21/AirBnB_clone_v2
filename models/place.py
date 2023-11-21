@@ -11,7 +11,7 @@ from sqlalchemy import Column, String, Integer, ForeignKey, Float, Table
 relationship_table = ...
 
 
-class Place(BaseModel):
+class Place(BaseModel, Base):
     """ A place to stay """
     __tablename__ = "places"
 
