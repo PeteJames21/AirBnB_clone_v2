@@ -27,7 +27,7 @@ class DBStorage:
                 os.getenv("HBNB_MYSQL_PWD"),
                 os.getenv("HBNB_MYSQL_HOST"),
                 os.getenv("HBNB_MYSQL_DB"))
-        self.engine = create_engine(URL, pool_pre_ping=True)
+        self.__engine = create_engine(URL, pool_pre_ping=True)
 
         # Drop all tables in we are in the test environment
         if os.getenv("HBNB_ENV") == "test":
