@@ -2,19 +2,14 @@
 """ Place Module for HBNB project """
 from models.base_model import BaseModel, Base
 from models.amenity import Amenity
-import models
+import os
 from models.review import Review
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, Integer, ForeignKey, Float, Table
 
 
-if models.is_type == "db":
-    relationship_table = Table('place_amenity', Base.metadata,
-                               Column('place_id', String(60),
-                                      nullable=False),
-                                Column('amenity_id', String(60),
-                                       ForeignKey('amenities.id'),
-                                       nullable=False))
+relationship_table = ...
+
 
 class Place(BaseModel):
     """ A place to stay """
@@ -34,12 +29,11 @@ class Place(BaseModel):
     amenities = relationship('Amenity', secondary=relationship_table,
                              viewonly=False)
 
-
     amenity_ids = []
 
     @property
     def reviews(self):
-        """returns the list of Review instances with place_id equals to the current Place.id
+        """Return list of Review instances
         """
         from models import storage
         rev_list = []
