@@ -3,9 +3,14 @@
 Defines a class for managing MySQL database storage.
 """
 
+import os
 from sqlalchemy import create_engine
 from models.base_model import Base
-from models import State, City, User, Place, Review, Amenity
+from models.state import State
+from models.city import City
+from models.user import User
+from models.review import Review
+from models.amenity import Amenity
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 
@@ -17,15 +22,15 @@ class DBStorage:
 
     def __init__(self):
         """Initialize an instance of this class."""
-        URL = f"mysql+mysqldb://{}:{}@{}:3306/{}".format(
-                getenv("HBNB_MYSQL_USER"),
-                getenv("HBNB_MYSQL_PWD"),
-                getenv("HBNB_MYSQL_HOST"),
-                getenv("HBNB_MYSQL_DB"))
+        URL = "mysql+mysqldb://{}:{}@{}:3306/{}".format(
+                os.getenv("HBNB_MYSQL_USER"),
+                os.getenv("HBNB_MYSQL_PWD"),
+                os.getenv("HBNB_MYSQL_HOST"),
+                os.getenv("HBNB_MYSQL_DB"))
         self.engine = create_engine(URL, pool_pre_ping=True)
 
         # Drop all tables in we are in the test environment
-        if getenv("HBNB_ENV") == "test":
+        if os.getenv("HBNB_ENV") == "test":
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
