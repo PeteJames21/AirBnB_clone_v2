@@ -39,7 +39,7 @@ class BaseModel:
         """Updates updated_at with current time when instance is changed"""
         from models import storage
         self.updated_at = datetime.utcnow()
-        storage.new(save)
+        storage.new(self)
         storage.save()
 
     def to_dict(self):
