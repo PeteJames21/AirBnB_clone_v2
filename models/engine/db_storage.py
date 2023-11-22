@@ -44,7 +44,7 @@ class DBStorage:
                 objects_list += self.__session.query(cls).all()
         else:
             # Get objects from the specified table
-            if type(cls) == str:
+            if type(cls) is str:
                 cls = eval(cls)
             objects_list = self.__session.query(cls).all()
 
