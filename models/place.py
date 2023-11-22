@@ -7,8 +7,14 @@ from models.review import Review
 from sqlalchemy.orm import relationship
 from sqlalchemy import Column, String, Integer, ForeignKey, Float, Table
 
-
-relationship_table = ...
+relationship_table = Table(
+        "place_amenity", Base.metadata,
+        Column("place_id", String(60), ForeignKey("places.id"),
+               nullable=False, primary_key=True),
+        Column(
+            "amenity_id", String(60), ForeignKey("amenities.id"),
+            nullable=False, primary_key=True)
+        )
 
 
 class Place(BaseModel, Base):
@@ -26,9 +32,8 @@ class Place(BaseModel, Base):
     latitude = Column(Float)
     longitude = Column(Float)
     reviews = relationship('Review', backref='place', cascade='delete')
-    amenities = relationship('Amenity', secondary=relationship_table,
+    amenities = relationship('Amenity', secondary='place_amenity',
                              viewonly=False)
-
     amenity_ids = []
 
     @property
@@ -51,7 +56,7 @@ class Place(BaseModel, Base):
         amenity_list = []
         all_amenities = storage.all('Amenity').values()
         for amenity in all_amenities:
-            if self.id == amenity.amenity_ids:
+            if amenity.id in self.amenity_ids:
                 amenity_list.append(amenity)
         return amenity_list
 
@@ -59,5 +64,5 @@ class Place(BaseModel, Base):
     def amenities(self, obj):
         """Sets method for adding an Amenity.id to the attribute amenity_ids.
         """
-        if isinstance(obj, 'Amenity'):
-            self.amenity_id.append(obj.id)
+        if isinstance(obj, Amenity):
+            self.amenity_ids.append(obj.id)
