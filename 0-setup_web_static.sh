@@ -2,11 +2,8 @@
 # Install Nginx and set up the file system
 
 # Install nginx if it is not already installed
-which nginx >> /dev/null
-if [ $? -eq 1 ]; then
-    apt-get update
-    apt-get -y install nginx
-fi
+apt-get update
+apt-get -y install nginx
 
 # Set up the file system
 DIRS=("/data/web_static/shared/" "/data/web_static/releases/test/")
