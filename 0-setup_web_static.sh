@@ -2,8 +2,11 @@
 # Install Nginx and set up the file system
 
 # Install nginx if it is not already installed
-apt-get update
-apt-get -y install nginx
+which nginx >> /dev/null
+if [ $? -eq 1 ]; then
+    apt-get update
+    apt-get -y install nginx
+fi
 
 # Set up the file system
 DIRS=("/data/web_static/shared/" "/data/web_static/releases/test/")
@@ -27,8 +30,8 @@ target_path="/data/web_static/releases/test"
 ln -sf "$target_path" "$link_path"
 
 # Set up file permissions
-chown -R pete /data/
-chgrp -R pete /data/
+chown -R ubuntu /data/
+chgrp -R ubuntu /data/
 
 # Set up nginx to serve the content of /data/web_static/current/ to
 # the URL path /hbnb_static
