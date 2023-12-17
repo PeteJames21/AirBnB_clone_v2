@@ -81,3 +81,28 @@ def deploy(c):
     """Create an archive and deploy it to the web servers."""
     archive_name = do_pack(c)
     return do_deploy(c, archive_name)
+
+
+@task
+def do_clean(c, number=0):
+    """
+    Delete out-of-date archives from the local host.
+
+    If number is 0 or 1, keep only the most recent version. If 2, keep the
+    most recent and the second most recent versions, etc. NOTE: the versions/
+    directory is not pushed to the remote hosts by the deployment tasks, thus
+    this task only modifies the filesystem of the local host.
+
+    :param number: The number of the most recent archives to keep.
+    """
+    # Get list of relative pathnnames of archives.
+    archives = [f"versions/{fname}" for fname in os.listdir("versions")]
+    # Sort archives based on modification times (oldest to newest)
+    archives = sorted(archives, reverse=False, key=lambda f: os.stat(f)[-1])
+
+    # Keep the specified number of archives. Delete the rest.
+    number = 1 if number == 0 else number
+    for _ in range(number):
+        archives.pop()
+    for fname in archives:
+        os.remove(fname)
