@@ -8,7 +8,7 @@ from fabric import ThreadingGroup as Group
 import os
 from datetime import datetime
 
-hosts = ["100.26.142.27", "107.22.146.148"]
+hosts = ["web1", "web2"]
 
 
 @task
@@ -19,11 +19,17 @@ def do_pack(c):
     dt = datetime.now()
     archive_name = f"web_static_{dt.year}{dt.month}{dt.day}{dt.hour}"\
                    f"{dt.minute}{dt.second}.tgz"
+    print(f"[Creating archive: {archive_name}]")
     # Files to be excluded from the archive
     excludes = "--exclude=versions --exclude=.git --exclude=.gitignore"
     # Compress all files in the pwd to the versions/ dir.
     result = c.run(f"tar {excludes} -czvf versions/{archive_name} .")
-    return result.ok
+    if not result.ok:
+        return False
+    print("[Archive created successfully]")
+
+    return "versions/" + archive_name  # Return relative pathname of archive
+
 
 @task
 def do_deploy(c, archive_path):
@@ -39,7 +45,7 @@ def do_deploy(c, archive_path):
     results = group.put(archive_path, remote=f"/tmp/{filename}")
     if results.failed:
         print("Could not push archive to remote servers")
-        return Falses
+        return False
 
     print("[uncompressing archive]")
     # Uncompress the archive [remote]
@@ -66,4 +72,12 @@ def do_deploy(c, archive_path):
         return False
 
     print("[Deployment successful]")
+
     return True
+
+
+@task
+def deploy(c):
+    """Create an archive and deploy it to the web servers."""
+    archive_name = do_pack(c)
+    return do_deploy(c, archive_name)
