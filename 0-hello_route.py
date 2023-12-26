@@ -11,4 +11,5 @@ app.url_map.strict_slashes = False
 
 @app.route("/")
 def index():
+    """The root page"""
     return "Hello HBNB!"
