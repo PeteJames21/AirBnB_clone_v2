@@ -44,7 +44,6 @@ def python(text="is cool"):
 @app.route("/number/<int:n>")
 def number(n):
     """The /number page"""
-    n = escape(n)
     return f"{n} is a number"
 
 
