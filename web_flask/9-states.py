@@ -12,6 +12,7 @@ app.url_map.strict_slashes = False
 
 @app.teardown_appcontext
 def teardown(error):
+    """Close the database connection"""
     storage.close()
 
 
