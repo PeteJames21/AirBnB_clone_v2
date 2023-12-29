@@ -17,14 +17,17 @@ def teardown(error):
 
 
 @app.route("/states")
-@app.route("/states/<id>")
-def list_states(id=None):
-    """List all states or the cities in a particular state"""
+def list_states():
+    """List all states"""
     states_dict = storage.all(State)
-    if not id:
-        states_list = list(storage.all(State).values())
-        return render_template("9-states.html", states=states_list)
+    states_list = list(storage.all(State).values())
+    return render_template("9-states.html", states=states_list)
 
+
+@app.route("/states/<id>")
+def list_states_cities(id):
+    """List all cities in a particular state"""
+    states_dict = storage.all(State)
     state_obj = states_dict.get(f"State.{id}", None)
     return render_template("9-states.html", state=state_obj)
 
