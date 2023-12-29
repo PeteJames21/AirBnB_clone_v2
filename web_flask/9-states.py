@@ -20,14 +20,12 @@ def teardown(error):
 def list_states(id=None):
     """List all states or the cities in a particular state"""
     states_dict = storage.all(State)
-    states = None
-    state_obj = None
     if not id:
-        states = list(storage.all(State).values())
-    else:
-        state_obj = states_dict.get(f"State.{id}", None)
+        states_list = list(storage.all(State).values())
+        return render_template("9-states.html", states=states_list)
 
-    return render_template("9-states.html", state=state_obj, states=states)
+    state_obj = states_dict.get(f"State.{id}", None)
+    return render_template("9-states.html", state=state_obj)
 
 
 if __name__ == "__main__":

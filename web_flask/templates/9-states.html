@@ -4,7 +4,7 @@
         <TITLE>HBNB</TITLE>
     </HEAD>
     <BODY>
-        {% if states %}
+        {% if states is defined %}
             <H1>States</H1>
 
             <UL>
@@ -13,7 +13,7 @@
                 {% endfor %}
             </UL>
 
-        {% elif state %}
+        {% elif state is defined and state is not none %}
             <H1>State: {{ state.name }}</H1>
 
             <H3>Cities:</H3>
