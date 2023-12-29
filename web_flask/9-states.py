@@ -17,7 +17,7 @@ def teardown(error):
 
 
 @app.route("/states")
-@app.route("/states/<string: id>")
+@app.route("/states/<string:id>")
 def list_states(id=None):
     """List all states or the cities in a particular state"""
     states_dict = storage.all(State)
