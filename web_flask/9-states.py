@@ -18,7 +18,7 @@ def teardown(error):
 @app.route("/states")
 @app.route("/states/<id>")
 def list_states(id=None):
-    """List all states in the database."""
+    """List all states or the cities in a particular state"""
     states_dict = storage.all(State)
     if not id:
         states_list = list(storage.all(State).values())
